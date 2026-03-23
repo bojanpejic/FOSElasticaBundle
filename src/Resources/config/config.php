@@ -31,11 +31,11 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('fos_elastica.client_prototype', Client::class)
         ->abstract()
-        ->arg('$config', \abstract_arg('configuration for Ruflin Client'))
-        ->arg('$forbiddenCodes', \abstract_arg('list of forbidden codes for Client'))
-        ->arg('$logger', \abstract_arg('logger for Ruflin Client'))
-        ->call('setStopwatch', [\service('debug.stopwatch')->nullOnInvalid()])
-        ->call('setEventDispatcher', [\service('event_dispatcher')->nullOnInvalid()])
+        ->arg('$config', abstract_arg('configuration for Ruflin Client'))
+        ->arg('$forbiddenCodes', abstract_arg('list of forbidden codes for Client'))
+        ->arg('$logger', abstract_arg('logger for Ruflin Client'))
+        ->call('setStopwatch', [service('debug.stopwatch')->nullOnInvalid()])
+        ->call('setEventDispatcher', [service('event_dispatcher')->nullOnInvalid()])
     ;
 
     $services->set(RoundRobinResurrect::class)
@@ -57,30 +57,30 @@ return static function (ContainerConfigurator $container): void {
 
     $services->set('fos_elastica.data_collector', ElasticaDataCollector::class)
         ->tag('data_collector', ['template' => '@FOSElastica/Collector/elastica.html.twig', 'id' => 'elastica'])
-        ->args([\service('fos_elastica.logger')])
+        ->args([service('fos_elastica.logger')])
     ;
 
     $services->set('fos_elastica.paginator.subscriber', PaginateElasticaQuerySubscriber::class)
         ->tag('kernel.event_subscriber')
-        ->args([\service('request_stack')])
+        ->args([service('request_stack')])
     ;
 
     $services->set('fos_elastica.logger', ElasticaLogger::class)
         ->args([
-            \service('logger')->nullOnInvalid(),
-            \param('kernel.debug'),
+            service('logger')->nullOnInvalid(),
+            param('kernel.debug'),
         ])
         ->tag('monolog.logger', ['channel' => 'elastica'])
     ;
 
     $services->set('fos_elastica.mapping_builder', MappingBuilder::class)
-        ->args([\service('event_dispatcher')])
+        ->args([service('event_dispatcher')])
     ;
 
     $services->set('fos_elastica.property_accessor', PropertyAccessor::class)
         ->args([
-            \param('fos_elastica.property_accessor.magicCall'),
-            \param('fos_elastica.property_accessor.throwExceptionOnInvalidIndex'),
+            param('fos_elastica.property_accessor.magicCall'),
+            param('fos_elastica.property_accessor.throwExceptionOnInvalidIndex'),
         ])
     ;
 };
